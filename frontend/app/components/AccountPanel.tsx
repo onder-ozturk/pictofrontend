@@ -101,7 +101,7 @@ export default function AccountPanel({ onClose, token, email }: Props) {
     localStorage.removeItem(AUTH_EMAIL_KEY);
     localStorage.removeItem(AUTH_USERID_KEY);
     onClose();
-    router.push("/auth");
+    router.push("/");
   };
 
   // Spending by model

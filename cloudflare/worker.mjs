@@ -5,7 +5,7 @@ import { handleAPI } from './api/router.mjs';
 const VERCEL_ORIGIN = "https://pictofrontend.vercel.app";
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env, _ctx) {
     const url = new URL(request.url);
 
     // CORS preflight
@@ -27,16 +27,9 @@ export default {
       });
     }
 
-    // API routes → handled by Worker + D1, except for OAuth routes which go to Python backend
+    // API routes → handled by Worker + D1
     if (url.pathname.startsWith('/api/')) {
-      if (
-        url.pathname.startsWith('/api/auth/github') ||
-        url.pathname.startsWith('/api/auth/google')
-      ) {
-        // Fallthrough to proxy below for OAuth routes
-      } else {
-        return handleAPI(request, env);
-      }
+      return handleAPI(request, env);
     }
 
     // Everything else (Frontend + Python OAuth backend proxy) → proxy to Vercel

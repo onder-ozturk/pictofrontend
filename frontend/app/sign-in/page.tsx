@@ -107,6 +107,7 @@ export default function SignInPage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => window.location.href = `${BACKEND_URL}/api/auth/google/login`}
                   className="group w-full flex items-center justify-between px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-100 text-[14px] font-medium text-[#111827] transition-all duration-200"
                 >
                   <div className="flex items-center gap-3">

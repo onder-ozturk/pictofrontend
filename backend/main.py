@@ -97,10 +97,12 @@ _raw_origins = os.getenv(
 )
 ALLOWED_ORIGINS: list[str] = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 
-# ─── GitHub OAuth (S4) ────────────────────────────────────────────────────────
+# ─── GitHub / Google OAuth (S4) ───────────────────────────────────────────────
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET", "")
-FRONTEND_URL = os.getenv("ORIGIN_FRONTEND", "http://localhost:3000")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+FRONTEND_URL = os.getenv("ORIGIN_FRONTEND", "https://pictofrontend.com")
 
 # ─── Rate limiter (S12) ───────────────────────────────────────────────────────
 _rate_lock = Lock()
@@ -1467,6 +1469,74 @@ async def github_callback(code: str):
         # 4. Generate our JWT Token and redirect back to frontend
         ptf_token = auth_module.create_access_token(user.id, user.email)
         logger.info("GitHub user logged in over OAuth: %s", user.email)
+
+        frontend_redirect = f"{FRONTEND_URL}/app?token={ptf_token}&email={user.email}&userId={user.id}"
+        return RedirectResponse(frontend_redirect)
+
+
+@app.get("/api/auth/google/login")
+async def google_login():
+    """Redirect user to Google OAuth login."""
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="Google OAuth not configured.")
+    
+    redirect_uri = f"https://accounts.google.com/o/oauth2/v2/auth?" \
+                   f"client_id={GOOGLE_CLIENT_ID}&" \
+                   f"response_type=code&" \
+                   f"scope=openid%20email%20profile&" \
+                   f"redirect_uri={FRONTEND_URL}/api/auth/google/callback"
+    return RedirectResponse(redirect_uri)
+
+
+@app.get("/api/auth/google/callback")
+async def google_callback(code: str):
+    """
+    Exchange code for an access token via Google API, fetch user email, 
+    register/login, and redirect to frontend with JWT token in query params.
+    """
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        raise HTTPException(status_code=500, detail="Google OAuth not configured.")
+
+    async with aiohttp.ClientSession() as session:
+        # 1. Exchange code for access token
+        token_url = "https://oauth2.googleapis.com/token"
+        data = {
+            "client_id": GOOGLE_CLIENT_ID,
+            "client_secret": GOOGLE_CLIENT_SECRET,
+            "code": code,
+            "grant_type": "authorization_code",
+            "redirect_uri": f"{FRONTEND_URL}/api/auth/google/callback"
+        }
+        async with session.post(token_url, data=data) as resp:
+            token_data = await resp.json()
+            access_token = token_data.get("access_token")
+            if not access_token:
+                raise HTTPException(status_code=400, detail="Failed to retrieve Google access token.")
+
+        # 2. Get user profile / email
+        userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+        auth_headers = {"Authorization": f"Bearer {access_token}"}
+        async with session.get(userinfo_url, headers=auth_headers) as resp:
+            if not resp.ok:
+                raise HTTPException(status_code=400, detail="Failed to fetch Google user info.")
+            user_info = await resp.json()
+
+        primary_email = user_info.get("email")
+        if not primary_email:
+            raise HTTPException(status_code=400, detail="No email found in Google account.")
+
+        # 3. Register or get user
+        try:
+            user = auth_module.register_oauth_user(primary_email)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+
+        # Ensure they have a credit balance record (similar to normal register)
+        await db.get_balance(user.id)
+
+        # 4. Generate our JWT Token and redirect back to frontend
+        ptf_token = auth_module.create_access_token(user.id, user.email)
+        logger.info("Google user logged in over OAuth: %s", user.email)
 
         frontend_redirect = f"{FRONTEND_URL}/app?token={ptf_token}&email={user.email}&userId={user.id}"
         return RedirectResponse(frontend_redirect)

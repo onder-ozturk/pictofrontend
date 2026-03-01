@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+backend/__pycache__/
+tests/__pycache__/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Build
+dist/
+build/
+
+# Misc
+.DS_Store
+*.log
+.wrangler/
+.pytest_cache/
+*.egg-info/
+
+# Database
+*.db
+*.sqlite
+
+# Large/unnecessary
+screenshot-to-code-main/
+BENCHMARK_REPORT.md
+JIRA_IMPORT.json
+frontend/tsconfig.tsbuildinfo
+
+# Claude local settings
+.claude/

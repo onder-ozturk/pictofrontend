@@ -1,0 +1,14 @@
+name = "pictofrontend-proxy"
+main = "cloudflare/worker.mjs"
+compatibility_date = "2026-03-01"
+workers_dev = false
+
+routes = [
+  { pattern = "pictofrontend.com/*", zone_name = "pictofrontend.com" },
+  { pattern = "www.pictofrontend.com/*", zone_name = "pictofrontend.com" }
+]
+
+[vars]
+DOMAIN = "pictofrontend.com"
+ORIGIN_FRONTEND = "http://88.246.154.131:80"
+ORIGIN_API = "http://88.246.154.131:80"

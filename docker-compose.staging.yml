@@ -1,0 +1,76 @@
+version: "3.9"
+# ── PicToFrontend — Staging Ortamı ───────────────────────────────────────────
+# Sprint 4 — s4-d1
+#
+# Kullanım:
+#   cp .env.staging backend/.env.staging
+#   docker compose -f docker-compose.staging.yml --env-file backend/.env.staging up -d
+#   bash scripts/smoke-test.sh http://localhost:8080
+#
+# Bu dosya üretimden şunlarla ayrılır:
+#   - Ayrı veritabanı (staging.db)
+#   - Farklı port (8080 → backend, 3001 → frontend, 8081 → nginx)
+#   - Kısıtlı kaynak limitleri (1 CPU, 512MB RAM)
+#   - Langfuse smoke test desteği (isteğe bağlı)
+
+services:
+  # ── Staging Backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8000"
+    env_file:
+      - ./backend/.env.staging
+    environment:
+      - ALLOWED_ORIGINS=http://localhost:3001,http://localhost:8081
+      - DB_PATH=/app/data/staging.db
+    volumes:
+      - staging_backend_data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 20s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+
+  # ── Staging Frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: http://localhost:8080
+    ports:
+      - "3001:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+  # ── Staging Nginx (HTTP only) ──────────────────────────────────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+
+volumes:
+  staging_backend_data:

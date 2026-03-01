@@ -1,52 +1,66 @@
-const APP_DOMAIN = "pictofrontend.com";
-const DEFAULT_FRONTEND_ORIGIN = "https://pictofrontend.vercel.app";
-const DEFAULT_API_ORIGIN = "https://pictofrontend.vercel.app";
+// PicToFrontend — Cloudflare Worker
+// Handles: API (D1 backend) + Vercel proxy (frontend)
+import { handleAPI } from './api/router.mjs';
+
+const VERCEL_ORIGIN = "https://pictofrontend.vercel.app";
 
 export default {
-  async fetch(request, env, _ctx) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    const frontendOrigin = env.ORIGIN_FRONTEND ?? DEFAULT_FRONTEND_ORIGIN;
-    const apiOrigin = env.ORIGIN_API ?? DEFAULT_API_ORIGIN;
 
-    const targetOrigin =
-      url.pathname === "/health" || url.pathname.startsWith("/api/")
-        ? apiOrigin
-        : frontendOrigin;
-
-    const targetUrl = new URL(url.pathname + url.search, targetOrigin);
-
-    const headers = new Headers(request.headers);
-    headers.set("Host", targetUrl.host);
-    headers.set("X-Forwarded-Host", url.hostname);
-    headers.set("X-Forwarded-Proto", url.protocol.replace(":", ""));
-    headers.set("X-Real-IP", request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown");
-
-    const isStreamingRequest = request.body !== null && !["GET", "HEAD"].includes(request.method.toUpperCase());
-    const init = {
-      method: request.method,
-      headers,
-      redirect: "manual",
-      ...(isStreamingRequest ? { body: request.body, duplex: "half" } : {}),
-    };
-
-    const response = await fetch(targetUrl.toString(), init);
-
-    if (targetUrl.pathname.startsWith("/api/") || targetUrl.pathname === "/health") {
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
+    // CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
       });
     }
 
-    const nextHeaders = new Headers(response.headers);
-    nextHeaders.set("x-served-by", "cloudflare-worker-proxy");
-    nextHeaders.set("x-forwarded-domain", APP_DOMAIN);
+    // Health check
+    if (url.pathname === '/health') {
+      return new Response(JSON.stringify({ status: 'healthy', version: '3.0.0', backend: 'cloudflare-worker+d1' }), {
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      });
+    }
 
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: nextHeaders,
-    });
+    // API routes → handled by Worker + D1
+    if (url.pathname.startsWith('/api/')) {
+      return handleAPI(request, env);
+    }
+
+    // Everything else → proxy to Vercel (frontend)
+    return proxyToVercel(request);
   },
 };
+
+async function proxyToVercel(request) {
+  const url = new URL(request.url);
+  const targetUrl = new URL(url.pathname + url.search, VERCEL_ORIGIN);
+
+  const headers = new Headers(request.headers);
+  headers.set('Host', 'pictofrontend.vercel.app');
+  headers.set('X-Forwarded-Host', url.hostname);
+  headers.set('X-Forwarded-Proto', 'https');
+
+  const isStreaming = request.body !== null && !['GET', 'HEAD'].includes(request.method);
+  const init = {
+    method: request.method,
+    headers,
+    redirect: 'manual',
+    ...(isStreaming ? { body: request.body, duplex: 'half' } : {}),
+  };
+
+  const response = await fetch(targetUrl.toString(), init);
+  const nextHeaders = new Headers(response.headers);
+  nextHeaders.set('x-served-by', 'cloudflare-worker');
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: nextHeaders,
+  });
+}

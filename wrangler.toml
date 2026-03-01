@@ -8,7 +8,10 @@ routes = [
   { pattern = "www.pictofrontend.com/*", zone_name = "pictofrontend.com" }
 ]
 
+[[d1_databases]]
+binding = "DB"
+database_name = "pictofrontend-db"
+database_id = "6bcf99a1-3b2d-48c3-890d-c3369287ed47"
+
 [vars]
 DOMAIN = "pictofrontend.com"
-ORIGIN_FRONTEND = "https://pictofrontend.vercel.app"
-ORIGIN_API = "https://pictofrontend.vercel.app"

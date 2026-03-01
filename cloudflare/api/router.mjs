@@ -1,6 +1,7 @@
 // API request router
 import { corsResponse, jsonResponse, errorResponse } from './crypto.mjs';
 import { registerHandler, loginHandler, refreshHandler, meHandler } from './auth.mjs';
+import { googleLoginHandler, googleCallbackHandler, githubLoginHandler, githubCallbackHandler } from './oauth.mjs';
 import { balanceHandler, historyHandler, topupHandler } from './credits.mjs';
 import { generateImageHandler, generateTextHandler, generateUrlHandler, versionsHandler } from './generate.mjs';
 import { modelsResponse } from './models.mjs';
@@ -17,10 +18,14 @@ export async function handleAPI(request, env) {
   if (path === '/api/models' && method === 'GET') return modelsResponse();
 
   // ── Auth ─────────────────────────────────────────────────────────────────
-  if (path === '/api/auth/register' && method === 'POST') return registerHandler(request, env);
-  if (path === '/api/auth/login'    && method === 'POST') return loginHandler(request, env);
-  if (path === '/api/auth/refresh'  && method === 'POST') return refreshHandler(request, env);
-  if (path === '/api/auth/me'       && method === 'GET')  return meHandler(request, env);
+  if (path === '/api/auth/register'        && method === 'POST') return registerHandler(request, env);
+  if (path === '/api/auth/login'           && method === 'POST') return loginHandler(request, env);
+  if (path === '/api/auth/refresh'         && method === 'POST') return refreshHandler(request, env);
+  if (path === '/api/auth/me'              && method === 'GET')  return meHandler(request, env);
+  if (path === '/api/auth/google/login'    && method === 'GET')  return googleLoginHandler(request, env);
+  if (path === '/api/auth/google/callback' && method === 'GET')  return googleCallbackHandler(request, env);
+  if (path === '/api/auth/github/login'    && method === 'GET')  return githubLoginHandler(request, env);
+  if (path === '/api/auth/github/callback' && method === 'GET')  return githubCallbackHandler(request, env);
 
   // ── Credits ───────────────────────────────────────────────────────────────
   if (path === '/api/credits/balance'  && method === 'GET')  return balanceHandler(request, env);

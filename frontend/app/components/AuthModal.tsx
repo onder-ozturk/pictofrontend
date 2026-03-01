@@ -124,6 +124,7 @@ export default function AuthModal({ onClose, onSuccess, initialMode = "register"
           <div className="flex gap-3 mb-5">
             <button
               type="button"
+              onClick={() => window.location.href = `${BACKEND_URL}/api/auth/github/login`}
               className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-[13px] font-medium text-gray-700 transition-colors shadow-sm"
             >
               {/* GitHub icon */}
@@ -134,6 +135,7 @@ export default function AuthModal({ onClose, onSuccess, initialMode = "register"
             </button>
             <button
               type="button"
+              onClick={() => window.location.href = `${BACKEND_URL}/api/auth/google/login`}
               className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-[13px] font-medium text-gray-700 transition-colors shadow-sm"
             >
               {/* Google icon */}

@@ -1,9 +1,9 @@
 "use client";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AUTH_TOKEN_KEY, AUTH_EMAIL_KEY } from "../../components/AuthModal";
 
-export default function AuthCallback() {
+function AuthCallbackInner() {
   const router = useRouter();
   const params = useSearchParams();
 
@@ -30,5 +30,17 @@ export default function AuthCallback() {
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f5f3ee" }}>
       <p style={{ color: "#666", fontSize: 14 }}>Signing you in…</p>
     </div>
+  );
+}
+
+export default function AuthCallback() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f5f3ee" }}>
+        <p style={{ color: "#666", fontSize: 14 }}>Loading…</p>
+      </div>
+    }>
+      <AuthCallbackInner />
+    </Suspense>
   );
 }

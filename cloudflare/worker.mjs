@@ -27,12 +27,19 @@ export default {
       });
     }
 
-    // API routes → handled by Worker + D1
+    // API routes → handled by Worker + D1, except for OAuth routes which go to Python backend
     if (url.pathname.startsWith('/api/')) {
-      return handleAPI(request, env);
+      if (
+        url.pathname.startsWith('/api/auth/github') ||
+        url.pathname.startsWith('/api/auth/google')
+      ) {
+        // Fallthrough to proxy below for OAuth routes
+      } else {
+        return handleAPI(request, env);
+      }
     }
 
-    // Everything else → proxy to Vercel (frontend)
+    // Everything else (Frontend + Python OAuth backend proxy) → proxy to Vercel
     return proxyToVercel(request);
   },
 };

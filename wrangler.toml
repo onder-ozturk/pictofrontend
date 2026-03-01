@@ -10,5 +10,5 @@ routes = [
 
 [vars]
 DOMAIN = "pictofrontend.com"
-ORIGIN_FRONTEND = "http://88.246.154.131:80"
-ORIGIN_API = "http://88.246.154.131:80"
+ORIGIN_FRONTEND = "https://pictofrontend.vercel.app"
+ORIGIN_API = "https://pictofrontend.vercel.app"

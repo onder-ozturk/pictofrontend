@@ -1,6 +1,6 @@
 const APP_DOMAIN = "pictofrontend.com";
-const DEFAULT_FRONTEND_ORIGIN = "http://88.246.154.131:3000";
-const DEFAULT_API_ORIGIN = "http://88.246.154.131:8000";
+const DEFAULT_FRONTEND_ORIGIN = "https://pictofrontend.vercel.app";
+const DEFAULT_API_ORIGIN = "https://pictofrontend.vercel.app";
 
 export default {
   async fetch(request, env, _ctx) {

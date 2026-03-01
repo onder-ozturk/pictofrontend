@@ -94,6 +94,7 @@ export default function SignInPage() {
               <div className="flex flex-col gap-3 mb-8">
                 <button
                   type="button"
+                  onClick={() => window.location.href = `${BACKEND_URL}/api/auth/github/login`}
                   className="w-full flex items-center justify-center gap-3 px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-50 text-[14px] font-medium text-[#111827] transition-colors"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

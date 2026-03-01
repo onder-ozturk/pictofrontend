@@ -105,6 +105,27 @@ def get_user_by_id(user_id: str) -> Optional[UserRecord]:
     return _users_by_id.get(user_id)
 
 
+def get_user_by_email(email: str) -> Optional[UserRecord]:
+    return _users_by_email.get(email.strip().lower())
+
+
+def register_oauth_user(email: str) -> UserRecord:
+    """Register or return an existing user authenticated via an OAuth provider."""
+    key = email.strip().lower()
+    with _store_lock:
+        if key in _users_by_email:
+            return _users_by_email[key]
+        uid = str(uuid.uuid4())
+        user = UserRecord(
+            id=uid,
+            email=key,
+            password_hash="OAUTH_USER",
+        )
+        _users_by_email[key] = user
+        _users_by_id[uid] = user
+    return user
+
+
 # ─── FastAPI Bearer dependency ─────────────────────────────────────────────────
 
 _bearer = HTTPBearer(auto_error=False)

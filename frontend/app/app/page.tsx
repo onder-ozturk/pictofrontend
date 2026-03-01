@@ -44,33 +44,33 @@ const CREDITS_KEY = "s2c_credits";
 
 const MODELS = [
   // Anthropic — Claude 3.x
-  { id: "claude-haiku",          name: "Claude 3.5 Haiku",    badge: "Fast",    badgeColor: "bg-amber-500/10 text-amber-400",  credits: 1,  desc: "Fastest Claude",        keyPrefix: "sk-ant-", hasThinking: false },
-  { id: "claude",                name: "Claude 3.5 Sonnet",   badge: "Premium", badgeColor: "bg-amber-500/10 text-amber-300",  credits: 5,  desc: "Best accuracy",         keyPrefix: "sk-ant-", hasThinking: false },
-  { id: "claude-opus",           name: "Claude 3 Opus",       badge: "Opus",    badgeColor: "bg-amber-600/10 text-amber-300",  credits: 15, desc: "Most powerful 3.x",     keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-haiku", name: "Claude 3.5 Haiku", badge: "Fast", badgeColor: "bg-amber-500/10 text-amber-400", credits: 1, desc: "Fastest Claude", keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude", name: "Claude 3.5 Sonnet", badge: "Premium", badgeColor: "bg-amber-500/10 text-amber-300", credits: 5, desc: "Best accuracy", keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-opus", name: "Claude 3 Opus", badge: "Opus", badgeColor: "bg-amber-600/10 text-amber-300", credits: 15, desc: "Most powerful 3.x", keyPrefix: "sk-ant-", hasThinking: false },
   // Sprint 4 — Extended thinking (s4-b2 / s4-f4)
-  { id: "claude-sonnet-thinking",name: "Claude 3.7 (Think)",  badge: "Think",   badgeColor: "bg-cyan-500/10 text-cyan-300",    credits: 20, desc: "Extended reasoning",    keyPrefix: "sk-ant-", hasThinking: true  },
+  { id: "claude-sonnet-thinking", name: "Claude 3.7 (Think)", badge: "Think", badgeColor: "bg-cyan-500/10 text-cyan-300", credits: 20, desc: "Extended reasoning", keyPrefix: "sk-ant-", hasThinking: true },
   // Anthropic — Claude 4.x
-  { id: "claude-sonnet-4-5",     name: "Claude Sonnet 4.5",   badge: "New",     badgeColor: "bg-orange-500/10 text-orange-300",credits: 6,  desc: "Speed & quality",       keyPrefix: "sk-ant-", hasThinking: false },
-  { id: "claude-sonnet-4-6",     name: "Claude Sonnet 4.6",   badge: "Latest",  badgeColor: "bg-orange-500/10 text-orange-200",credits: 7,  desc: "Best Sonnet yet",       keyPrefix: "sk-ant-", hasThinking: false },
-  { id: "claude-opus-4-5",       name: "Claude Opus 4.5",     badge: "Opus4",   badgeColor: "bg-red-500/10 text-red-300",      credits: 18, desc: "Premium reasoning",     keyPrefix: "sk-ant-", hasThinking: false },
-  { id: "claude-opus-4-6",       name: "Claude Opus 4.6",     badge: "Top",     badgeColor: "bg-red-500/10 text-red-200",      credits: 22, desc: "Most powerful Claude",  keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-sonnet-4-5", name: "Claude Sonnet 4.5", badge: "New", badgeColor: "bg-orange-500/10 text-orange-300", credits: 6, desc: "Speed & quality", keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6", badge: "Latest", badgeColor: "bg-orange-500/10 text-orange-200", credits: 7, desc: "Best Sonnet yet", keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-opus-4-5", name: "Claude Opus 4.5", badge: "Opus4", badgeColor: "bg-red-500/10 text-red-300", credits: 18, desc: "Premium reasoning", keyPrefix: "sk-ant-", hasThinking: false },
+  { id: "claude-opus-4-6", name: "Claude Opus 4.6", badge: "Top", badgeColor: "bg-red-500/10 text-red-200", credits: 22, desc: "Most powerful Claude", keyPrefix: "sk-ant-", hasThinking: false },
   // OpenAI
-  { id: "gpt4o-mini",            name: "GPT-4o Mini",         badge: "Economy", badgeColor: "bg-green-500/10 text-green-400",  credits: 1,  desc: "Fast & cheap",          keyPrefix: "sk-",     hasThinking: false },
-  { id: "gpt4o",                 name: "GPT-4o",              badge: "Balanced",badgeColor: "bg-blue-500/10 text-blue-400",    credits: 3,  desc: "Good balance",          keyPrefix: "sk-",     hasThinking: false },
-  { id: "gpt4-turbo",            name: "GPT-4 Turbo",         badge: "Turbo",   badgeColor: "bg-blue-500/10 text-blue-300",    credits: 4,  desc: "High quality",          keyPrefix: "sk-",     hasThinking: false },
-  { id: "gpt-4-1",               name: "GPT-4.1",             badge: "New",     badgeColor: "bg-blue-500/10 text-blue-200",    credits: 5,  desc: "OpenAI flagship",       keyPrefix: "sk-",     hasThinking: false },
-  { id: "o3-mini",               name: "o3-mini (Reasoning)", badge: "Reason",  badgeColor: "bg-sky-500/10 text-sky-300",      credits: 8,  desc: "Text-only reasoning",   keyPrefix: "sk-",     hasThinking: false },
+  { id: "gpt4o-mini", name: "GPT-4o Mini", badge: "Economy", badgeColor: "bg-green-500/10 text-green-400", credits: 1, desc: "Fast & cheap", keyPrefix: "sk-", hasThinking: false },
+  { id: "gpt4o", name: "GPT-4o", badge: "Balanced", badgeColor: "bg-blue-500/10 text-blue-400", credits: 3, desc: "Good balance", keyPrefix: "sk-", hasThinking: false },
+  { id: "gpt4-turbo", name: "GPT-4 Turbo", badge: "Turbo", badgeColor: "bg-blue-500/10 text-blue-300", credits: 4, desc: "High quality", keyPrefix: "sk-", hasThinking: false },
+  { id: "gpt-4-1", name: "GPT-4.1", badge: "New", badgeColor: "bg-blue-500/10 text-blue-200", credits: 5, desc: "OpenAI flagship", keyPrefix: "sk-", hasThinking: false },
+  { id: "o3-mini", name: "o3-mini (Reasoning)", badge: "Reason", badgeColor: "bg-sky-500/10 text-sky-300", credits: 8, desc: "Text-only reasoning", keyPrefix: "sk-", hasThinking: false },
   // Google
-  { id: "gemini",                name: "Gemini 1.5 Flash",    badge: "Flash",   badgeColor: "bg-purple-500/10 text-purple-400",credits: 2,  desc: "Fast multimodal",       keyPrefix: "AIza",    hasThinking: false },
-  { id: "gemini-pro",            name: "Gemini 1.5 Pro",      badge: "Pro",     badgeColor: "bg-purple-500/10 text-purple-300",credits: 6,  desc: "Google's best",         keyPrefix: "AIza",    hasThinking: false },
+  { id: "gemini", name: "Gemini 1.5 Flash", badge: "Flash", badgeColor: "bg-purple-500/10 text-purple-400", credits: 2, desc: "Fast multimodal", keyPrefix: "AIza", hasThinking: false },
+  { id: "gemini-pro", name: "Gemini 1.5 Pro", badge: "Pro", badgeColor: "bg-purple-500/10 text-purple-300", credits: 6, desc: "Google's best", keyPrefix: "AIza", hasThinking: false },
   // DeepSeek
-  { id: "deepseek",              name: "DeepSeek V3",         badge: "OSS",     badgeColor: "bg-teal-500/10 text-teal-400",    credits: 2,  desc: "Best open-source",      keyPrefix: "sk-",     hasThinking: false },
-  { id: "deepseek-r1",           name: "DeepSeek R1",         badge: "Reason",  badgeColor: "bg-teal-500/10 text-teal-300",    credits: 4,  desc: "Text-only reasoning",   keyPrefix: "sk-",     hasThinking: false },
+  { id: "deepseek", name: "DeepSeek V3", badge: "OSS", badgeColor: "bg-teal-500/10 text-teal-400", credits: 2, desc: "Best open-source", keyPrefix: "sk-", hasThinking: false },
+  { id: "deepseek-r1", name: "DeepSeek R1", badge: "Reason", badgeColor: "bg-teal-500/10 text-teal-300", credits: 4, desc: "Text-only reasoning", keyPrefix: "sk-", hasThinking: false },
   // Alibaba Qwen
-  { id: "qwen-vl",               name: "Qwen VL Max",         badge: "Vision",  badgeColor: "bg-indigo-500/10 text-indigo-400",credits: 4,  desc: "Alibaba vision model",  keyPrefix: "sk-",     hasThinking: false },
-  { id: "qwen-vl-plus",          name: "Qwen VL Plus",        badge: "Fast",    badgeColor: "bg-indigo-500/10 text-indigo-300",credits: 2,  desc: "Fast & economical",     keyPrefix: "sk-",     hasThinking: false },
+  { id: "qwen-vl", name: "Qwen VL Max", badge: "Vision", badgeColor: "bg-indigo-500/10 text-indigo-400", credits: 4, desc: "Alibaba vision model", keyPrefix: "sk-", hasThinking: false },
+  { id: "qwen-vl-plus", name: "Qwen VL Plus", badge: "Fast", badgeColor: "bg-indigo-500/10 text-indigo-300", credits: 2, desc: "Fast & economical", keyPrefix: "sk-", hasThinking: false },
   // Moonshot (Kimi)
-  { id: "kimi",                  name: "Kimi (Moonshot)",     badge: "128k",    badgeColor: "bg-pink-500/10 text-pink-400",    credits: 3,  desc: "Long context model",    keyPrefix: "sk-",     hasThinking: false },
+  { id: "kimi", name: "Kimi (Moonshot)", badge: "128k", badgeColor: "bg-pink-500/10 text-pink-400", credits: 3, desc: "Long context model", keyPrefix: "sk-", hasThinking: false },
 ] as const;
 
 type ModelId = typeof MODELS[number]["id"];
@@ -249,12 +249,28 @@ export default function AppPage() {
       .catch(() => setBackendOnline(false));
   }, []);
 
-  // Sprint 4 s4-f2 — Load auth token from localStorage
+  // Sprint 4 s4-f2 — Load auth token from localStorage (and check URL for OAuth login)
   useEffect(() => {
-    const token = localStorage.getItem(AUTH_TOKEN_KEY);
-    const email = localStorage.getItem(AUTH_EMAIL_KEY);
-    if (token) setAuthToken(token);
-    if (email) setAuthEmail(email);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlToken = params.get("token");
+      const urlEmail = params.get("email");
+      const urlUserId = params.get("userId");
+
+      if (urlToken && urlEmail && urlUserId) {
+        localStorage.setItem(AUTH_TOKEN_KEY, urlToken);
+        localStorage.setItem(AUTH_EMAIL_KEY, urlEmail);
+        localStorage.setItem("ptf_user_id", urlUserId);
+
+        // Remove query parameters from URL without refreshing
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      const token = localStorage.getItem(AUTH_TOKEN_KEY);
+      const email = localStorage.getItem(AUTH_EMAIL_KEY);
+      if (token) setAuthToken(token);
+      if (email) setAuthEmail(email);
+    }
   }, []);
 
   // S3-S7 — Elapsed timer during generation
@@ -655,7 +671,7 @@ export default function AppPage() {
   const downloadCode = () => {
     const ext = selectedFramework === "react" ? "jsx"
       : selectedFramework === "vue" ? "vue"
-      : "html";
+        : "html";
     const blob = new Blob([generatedCode], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -667,8 +683,8 @@ export default function AppPage() {
   const creditClass = credits === 0
     ? "bg-red-500/10 border-red-500/30 text-red-400"
     : credits < 10
-    ? "bg-red-500/10 border-red-500/20 text-red-400"
-    : "bg-amber-500/10 border-amber-500/20 text-amber-400";
+      ? "bg-red-500/10 border-red-500/20 text-red-400"
+      : "bg-amber-500/10 border-amber-500/20 text-amber-400";
 
   const generateBtnContent = () => {
     if (appState === "sending") return (
@@ -704,12 +720,12 @@ export default function AppPage() {
   };
 
   const FRAMEWORKS: { id: Framework; label: string }[] = [
-    { id: "html",      label: "HTML" },
-    { id: "react",     label: "React" },
-    { id: "vue",       label: "Vue" },
+    { id: "html", label: "HTML" },
+    { id: "react", label: "React" },
+    { id: "vue", label: "Vue" },
     { id: "bootstrap", label: "Bootstrap" },
-    { id: "svelte",    label: "Svelte" },
-    { id: "alpine",    label: "Alpine.js" },
+    { id: "svelte", label: "Svelte" },
+    { id: "alpine", label: "Alpine.js" },
   ];
 
   return (
@@ -933,12 +949,12 @@ export default function AppPage() {
                     onFocus={() => setApiKeyTouched(false)}
                     placeholder={
                       (ANTHROPIC_MODELS as readonly string[]).includes(selectedModel) ? "sk-ant-…" :
-                      ["gemini", "gemini-pro"].includes(selectedModel) ? "AIza…" : "sk-…"
+                        ["gemini", "gemini-pro"].includes(selectedModel) ? "AIza…" : "sk-…"
                     }
                     className={`w-full bg-[#111] border rounded-lg px-3 py-2.5 text-sm text-gray-200 placeholder:text-gray-600 focus:outline-none transition-colors
                       ${apiKeyError ? "border-red-500/50 focus:border-red-500/70" :
                         apiKeyValid ? "border-green-500/40 focus:border-green-500/60" :
-                        "border-white/[0.08] focus:border-blue-500/50"}`}
+                          "border-white/[0.08] focus:border-blue-500/50"}`}
                   />
                   {apiKeyTouched && apiKey && (
                     <span className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -1048,10 +1064,10 @@ export default function AppPage() {
                   ${appState === "streaming"
                     ? "bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20"
                     : appState === "sending"
-                    ? "bg-blue-500/10 border border-blue-500/20 text-blue-400 cursor-wait"
-                    : canGenerate
-                    ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-                    : "bg-white/5 text-gray-600 cursor-not-allowed"}`}
+                      ? "bg-blue-500/10 border border-blue-500/20 text-blue-400 cursor-wait"
+                      : canGenerate
+                        ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20"
+                        : "bg-white/5 text-gray-600 cursor-not-allowed"}`}
               >
                 {generateBtnContent()}
               </button>
@@ -1191,10 +1207,10 @@ export default function AppPage() {
                     {inputMode === "screenshot"
                       ? `// Your generated code will appear here...\n//\n// 1. Upload a screenshot\n// 2. Enter your API key\n// 3. Select AI model\n// 4. Click "Generate Code"\n//\n// Code streams in real-time as AI writes it!`
                       : inputMode === "video"
-                      ? `// Video mode:\n// 1. Upload a video (MP4/WEBM/MOV)\n// 2. Enter your API key\n// 3. Select AI model\n// 4. Click "Generate Code"\n//\n// A representative frame is extracted and converted to code in real-time!`
-                      : inputMode === "url"
-                      ? `// URL mode:\n// 1. Paste a public URL\n// 2. Enter your API key\n// 3. Click Generate — we'll screenshot and convert it!`
-                      : `// Text mode:\n// 1. Describe the UI you want to create\n// 2. Enter your API key\n// 3. Click Generate — AI will build it from scratch!`}
+                        ? `// Video mode:\n// 1. Upload a video (MP4/WEBM/MOV)\n// 2. Enter your API key\n// 3. Select AI model\n// 4. Click "Generate Code"\n//\n// A representative frame is extracted and converted to code in real-time!`
+                        : inputMode === "url"
+                          ? `// URL mode:\n// 1. Paste a public URL\n// 2. Enter your API key\n// 3. Click Generate — we'll screenshot and convert it!`
+                          : `// Text mode:\n// 1. Describe the UI you want to create\n// 2. Enter your API key\n// 3. Click Generate — AI will build it from scratch!`}
                   </span>
                 )}
               </pre>
@@ -1319,8 +1335,8 @@ export default function AppPage() {
                     {inputMode === "video"
                       ? "Extracting frame and processing…"
                       : inputMode === "url"
-                      ? "Taking screenshot and processing…"
-                      : "Processing…"}
+                        ? "Taking screenshot and processing…"
+                        : "Processing…"}
                   </span>
                   <span className="flex items-center gap-1 text-[11px] text-gray-600">
                     <Clock size={10} /> {elapsedSec}s

@@ -46,7 +46,7 @@ import openai
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile, WebSocket, WebSocketDisconnect, Body
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse, RedirectResponse
 from pydantic import BaseModel, Field as PydanticField
 
 from models import (
@@ -96,6 +96,11 @@ _raw_origins = os.getenv(
     "http://localhost:3000,http://127.0.0.1:3000,http://192.168.1.142:3000",
 )
 ALLOWED_ORIGINS: list[str] = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
+# ─── GitHub OAuth (S4) ────────────────────────────────────────────────────────
+GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID", "")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET", "")
+FRONTEND_URL = os.getenv("ORIGIN_FRONTEND", "http://localhost:3000")
 
 # ─── Rate limiter (S12) ───────────────────────────────────────────────────────
 _rate_lock = Lock()
@@ -1395,6 +1400,76 @@ async def auth_login(req: LoginRequest):
         "user_id":      user.id,
         "email":        user.email,
     }
+
+
+@app.get("/api/auth/github/login")
+async def github_login():
+    """Redirect user to GitHub OAuth login."""
+    if not GITHUB_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="GitHub OAuth not configured.")
+    redirect_uri = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=user:email"
+    return RedirectResponse(redirect_uri)
+
+
+@app.get("/api/auth/github/callback")
+async def github_callback(code: str):
+    """
+    Exchange code for an access token, fetch user email, register/login,
+    and redirect to frontend with JWT token in query params.
+    """
+    if not GITHUB_CLIENT_ID or not GITHUB_CLIENT_SECRET:
+        raise HTTPException(status_code=500, detail="GitHub OAuth not configured.")
+
+    async with aiohttp.ClientSession() as session:
+        # 1. Exchange code for access token
+        token_url = "https://github.com/login/oauth/access_token"
+        headers = {"Accept": "application/json"}
+        data = {
+            "client_id": GITHUB_CLIENT_ID,
+            "client_secret": GITHUB_CLIENT_SECRET,
+            "code": code,
+        }
+        async with session.post(token_url, json=data, headers=headers) as resp:
+            token_data = await resp.json()
+            access_token = token_data.get("access_token")
+            if not access_token:
+                raise HTTPException(status_code=400, detail="Failed to retrieve GitHub access token.")
+
+        # 2. Get user emails
+        email_url = "https://api.github.com/user/emails"
+        auth_headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/vnd.github.v3+json"}
+        async with session.get(email_url, headers=auth_headers) as resp:
+            if not resp.ok:
+                raise HTTPException(status_code=400, detail="Failed to fetch GitHub email.")
+            emails = await resp.json()
+
+        # Find primary or first verified email
+        primary_email = None
+        for email_info in emails:
+            if email_info.get("primary") and email_info.get("verified"):
+                primary_email = email_info.get("email")
+                break
+        if not primary_email and emails:
+            primary_email = emails[0].get("email")
+
+        if not primary_email:
+            raise HTTPException(status_code=400, detail="No email found in GitHub account.")
+
+        # 3. Register or get user
+        try:
+            user = auth_module.register_oauth_user(primary_email)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+
+        # Ensure they have a credit balance record (similar to normal register)
+        await db.get_balance(user.id)
+
+        # 4. Generate our JWT Token and redirect back to frontend
+        ptf_token = auth_module.create_access_token(user.id, user.email)
+        logger.info("GitHub user logged in over OAuth: %s", user.email)
+
+        frontend_redirect = f"{FRONTEND_URL}/app?token={ptf_token}&email={user.email}&userId={user.id}"
+        return RedirectResponse(frontend_redirect)
 
 
 @app.post("/api/auth/refresh")

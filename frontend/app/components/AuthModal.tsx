@@ -125,7 +125,7 @@ export default function AuthModal({ onClose, onSuccess, initialMode = "register"
             <button
               type="button"
               onClick={() => window.location.href = `${BACKEND_URL}/api/auth/github/login`}
-              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-[13px] font-medium text-gray-700 transition-colors shadow-sm"
+              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-200 text-[13px] font-medium text-gray-700 transition-colors shadow-sm cursor-pointer"
             >
               {/* GitHub icon */}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -136,7 +136,7 @@ export default function AuthModal({ onClose, onSuccess, initialMode = "register"
             <button
               type="button"
               onClick={() => window.location.href = `${BACKEND_URL}/api/auth/google/login`}
-              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-[13px] font-medium text-gray-700 transition-colors shadow-sm"
+              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-200 text-[13px] font-medium text-gray-700 transition-colors shadow-sm cursor-pointer"
             >
               {/* Google icon */}
               <svg width="16" height="16" viewBox="0 0 24 24">

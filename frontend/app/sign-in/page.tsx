@@ -95,7 +95,7 @@ export default function SignInPage() {
                 <button
                   type="button"
                   onClick={() => window.location.href = `${BACKEND_URL}/api/auth/github/login`}
-                  className="group w-full flex items-center justify-between px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-100 text-[14px] font-medium text-[#111827] transition-all duration-200"
+                  className="group w-full flex items-center justify-between px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-100 active:bg-gray-200 text-[14px] font-medium text-[#111827] transition-all duration-200 cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -108,7 +108,7 @@ export default function SignInPage() {
                 <button
                   type="button"
                   onClick={() => window.location.href = `${BACKEND_URL}/api/auth/google/login`}
-                  className="group w-full flex items-center justify-between px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-100 text-[14px] font-medium text-[#111827] transition-all duration-200"
+                  className="group w-full flex items-center justify-between px-4 py-[10px] rounded-[6px] border border-gray-200 bg-white hover:bg-gray-100 active:bg-gray-200 text-[14px] font-medium text-[#111827] transition-all duration-200 cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <svg width="18" height="18" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@ export default function SignInPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-[10px] rounded-[6px] font-bold text-[13px] tracking-[0.02em] text-white transition-all bg-[#0A0A0A] hover:bg-[#1f1f1f]"
+                  className="w-full py-[10px] rounded-[6px] font-bold text-[13px] tracking-[0.02em] text-white transition-all bg-[#0A0A0A] hover:bg-[#1f1f1f] active:bg-[#333] cursor-pointer"
                 >
                   CONTINUE
                 </button>
@@ -159,7 +159,7 @@ export default function SignInPage() {
                 <label className="block text-[13px] text-[#111827] font-medium">
                   Password
                 </label>
-                <button type="button" onClick={() => setStep("email")} className="text-[13px] text-[#6b7280] hover:text-[#111827]">
+                <button type="button" onClick={() => setStep("email")} className="text-[13px] text-[#6b7280] hover:text-[#111827] cursor-pointer">
                   ← Back
                 </button>
               </div>
@@ -185,7 +185,7 @@ export default function SignInPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-[8px] font-semibold text-[13px] tracking-wide text-white transition-all bg-[#0A0A0A] hover:bg-[#1f1f1f] disabled:opacity-60"
+                className="w-full py-3 rounded-[8px] font-semibold text-[13px] tracking-wide text-white transition-all bg-[#0A0A0A] hover:bg-[#1f1f1f] active:bg-[#333] disabled:opacity-60 cursor-pointer"
               >
                 {loading ? "SIGNING IN..." : "SIGN IN"}
               </button>

@@ -684,19 +684,18 @@ export default function AppPage() {
                 </div>
               )}
 
-              {/* Generate button */}
-              <button
-                onClick={needsCredits ? () => { window.location.href = "/"; } : () => generateCode()}
-                disabled={!isGenerating && !canGenerateIgnoringCredits && !needsCredits}
-                className={`w-full mt-5 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-[15px] transition-all
-                  ${needsCredits
-                    ? "bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 cursor-pointer"
-                    : canGenerate
-                      ? "bg-[#1d1d1d] border border-white/10 text-white hover:bg-[#252525] cursor-pointer"
-                      : "bg-white/5 text-gray-600 cursor-not-allowed"}`}
-              >
-                {generateBtnContent()}
-              </button>
+              {/* Generate button — only visible when there is input or credits needed */}
+              {(canGenerateIgnoringCredits || needsCredits) && (
+                <button
+                  onClick={needsCredits ? () => { window.location.href = "/"; } : () => generateCode()}
+                  className={`w-full mt-5 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-[15px] transition-all cursor-pointer
+                    ${needsCredits
+                      ? "bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20"
+                      : "bg-[#1d1d1d] border border-white/10 text-white hover:bg-[#252525]"}`}
+                >
+                  {generateBtnContent()}
+                </button>
+              )}
 
               {/* Credits hint */}
               {credits < 20 && (

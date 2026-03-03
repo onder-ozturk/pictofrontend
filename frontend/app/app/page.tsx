@@ -234,13 +234,16 @@ export default function AppPage() {
   const apiKeyError = apiKeyTouched ? validateApiKey(apiKey, selectedModel) : null;
   const apiKeyValid = apiKey.trim().length > 0 && apiKeyError === null;
 
-  const canGenerate = (() => {
-    if (isGenerating || !apiKeyValid || credits < currentModel.credits) return false;
+  const canGenerateIgnoringCredits = (() => {
+    if (isGenerating || !apiKeyValid) return false;
     if (inputMode === "screenshot" || inputMode === "video") return !!imageFile;
     if (inputMode === "url") return urlInput.trim().length > 0;
     if (inputMode === "text") return textInput.trim().length >= 10;
     return false;
   })();
+  const hasEnoughCredits = credits >= currentModel.credits;
+  const needsCredits = canGenerateIgnoringCredits && !hasEnoughCredits;
+  const canGenerate = canGenerateIgnoringCredits && hasEnoughCredits;
 
   // Backend health check
   useEffect(() => {
@@ -578,8 +581,7 @@ export default function AppPage() {
     if (!canGenerate && !overrideTextPrompt) return;
 
     if (!safeDeduct(currentModel.credits)) {
-      setErrorMessage(`Insufficient credits. Need ${currentModel.credits}, have ${credits}.`);
-      setAppState("error");
+      window.location.href = "/";
       return;
     }
 
@@ -707,7 +709,7 @@ export default function AppPage() {
         Stop Generating
       </>
     );
-    if (credits < currentModel.credits) return (<><Coins size={16} /> Insufficient Credits</>);
+    if (needsCredits) return (<><Coins size={16} /> Get More Credits →</>);
     return (
       <>
         <Wand2 size={16} />
@@ -1058,28 +1060,34 @@ export default function AppPage() {
             {/* Generate / Stop button */}
             <div className="mt-auto">
               <button
-                onClick={appState === "streaming" ? stopGenerating : () => generateCode()}
-                disabled={appState === "sending" || (!isGenerating && !canGenerate)}
+                onClick={
+                  appState === "streaming" ? stopGenerating :
+                  needsCredits ? () => { window.location.href = "/"; } :
+                  () => generateCode()
+                }
+                disabled={appState === "sending" || (!isGenerating && !canGenerateIgnoringCredits && !needsCredits)}
                 className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-[15px] transition-all
                   ${appState === "streaming"
                     ? "bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20"
                     : appState === "sending"
                       ? "bg-blue-500/10 border border-blue-500/20 text-blue-400 cursor-wait"
-                      : canGenerate
-                        ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-                        : "bg-white/5 text-gray-600 cursor-not-allowed"}`}
+                      : needsCredits
+                        ? "bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 cursor-pointer"
+                        : canGenerate
+                          ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20"
+                          : "bg-white/5 text-gray-600 cursor-not-allowed"}`}
               >
                 {generateBtnContent()}
               </button>
               <p className="text-center text-gray-600 text-[12px] mt-2">
                 {credits} credits remaining
                 {credits < 20 && (
-                  <button
-                    onClick={() => { add(50); showToast("+50 credits added!"); }}
-                    className="ml-2 text-blue-400 hover:underline"
+                  <a
+                    href="/"
+                    className="ml-2 text-amber-400 hover:underline"
                   >
-                    + Add 50
-                  </button>
+                    Upgrade →
+                  </a>
                 )}
               </p>
             </div>

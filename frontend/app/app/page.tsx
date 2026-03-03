@@ -559,7 +559,7 @@ export default function AppPage() {
 
         {/* INPUT AREA — visible when no code and not actively generating */}
         {!generatedCode && appState !== "sending" && !isGenerating && (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 overflow-auto">
+          <div className="flex-1 flex flex-col items-center justify-start p-6 pt-10 overflow-auto">
             <div className="w-full max-w-[760px]">
 
               {/* Input mode tabs */}
